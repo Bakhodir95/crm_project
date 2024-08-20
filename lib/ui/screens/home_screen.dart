@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Home Screen"),
         centerTitle: true,
+        leading: Text("Salom Mening Ismim "),
         actions: [
           IconButton(
             onPressed: () {
