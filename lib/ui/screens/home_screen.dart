@@ -1,16 +1,12 @@
-import 'package:crm/controllers/auth_controller.dart';
+import 'package:crm/bloc/authbloc/auth_bloc.dart';
+import 'package:crm/bloc/authbloc/auth_event.dart';
+import 'package:crm/bloc/authbloc/auth_state.dart';
 import 'package:crm/ui/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final _authController = AuthController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +16,29 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {
-                _authController.logout();
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (ctx) => const LoginScreen()));
-              },
-              icon: const Icon(Icons.logout))
+            onPressed: () {
+              context.read<AuthBloc>().add(LogoutEvent());
+            },
+            icon: const Icon(Icons.logout),
+          )
         ],
+      ),
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthLoggedOut) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+            );
+          } else if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
+        child: Center(
+          child: Text('Welcome to the Home Screen!'),
+        ),
       ),
     );
   }

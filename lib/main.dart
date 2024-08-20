@@ -1,5 +1,8 @@
+import 'package:crm/bloc/authbloc/auth_bloc.dart';
+import 'package:crm/controllers/auth_controller.dart';
 import 'package:crm/ui/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
@@ -13,12 +16,13 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(375, 812),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          scaffoldBackgroundColor: Colors.blue.shade50,
-        ),
-        home: LoginScreen(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthBloc(authController: AuthController()),
+          ),
+        ],
+        child: Container(),
       ),
     );
   }
