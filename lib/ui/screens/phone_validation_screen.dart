@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PhoneValidationScreen extends StatelessWidget {
+  const PhoneValidationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +63,7 @@ class PhoneValidationScreen extends StatelessWidget {
           ),
           child: DropdownButton<String>(
             value: '+1',
-            underline: SizedBox(),
+            underline: const SizedBox(),
             items: ['+1', '+998', '+44'].map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -78,7 +80,7 @@ class PhoneValidationScreen extends StatelessWidget {
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.r),
-                borderSide: BorderSide(color: Colors.blueAccent),
+                borderSide: const BorderSide(color: Colors.blueAccent),
               ),
               labelText: 'Mobile Number',
             ),
@@ -102,7 +104,7 @@ class PhoneValidationScreen extends StatelessWidget {
               counterText: '',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.r),
-                borderSide: BorderSide(color: Colors.blueAccent),
+                borderSide: const BorderSide(color: Colors.blueAccent),
               ),
             ),
           ),
@@ -132,7 +134,7 @@ class PhoneValidationScreen extends StatelessWidget {
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: Colors.blueAccent),
+          borderSide: const BorderSide(color: Colors.blueAccent),
         ),
         labelText: 'Email Address',
       ),
@@ -145,10 +147,10 @@ class PhoneValidationScreen extends StatelessWidget {
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: Colors.blueAccent),
+          borderSide: const BorderSide(color: Colors.blueAccent),
         ),
         labelText: 'Create Password',
-        suffixIcon: Icon(Icons.remove_red_eye),
+        suffixIcon: const Icon(Icons.remove_red_eye),
       ),
     );
   }
@@ -171,7 +173,7 @@ class PhoneValidationScreen extends StatelessWidget {
             style: TextStyle(fontSize: 16.sp),
           ),
           SizedBox(width: 10.w),
-          Icon(Icons.arrow_forward),
+          const Icon(Icons.arrow_forward),
         ],
       ),
     );

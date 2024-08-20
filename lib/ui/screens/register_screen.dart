@@ -1,9 +1,7 @@
-import 'package:crm/bloc/authbloc/auth_bloc.dart';
-import 'package:crm/bloc/authbloc/auth_event.dart';
-import 'package:crm/bloc/authbloc/auth_state.dart';
+import 'package:crm/services/auth_service.dart';
 import 'package:crm/ui/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -14,23 +12,33 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _authController = AuthController();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmationController = TextEditingController();
+  bool _rememberMe = false;
 
-  void _handleSignUp() {
+  void _handleSignUp() async {
     final name = _nameController.text;
     final phone = _phoneController.text;
     final password = _passwordController.text;
     final passwordConfirmation = _passwordConfirmationController.text;
 
-    context.read<AuthBloc>().add(SignUpEvent(
-          name: name,
-          phone: phone,
-          password: password,
-          passwordConfirmation: passwordConfirmation,
-        ));
+    final response = await _authController.signUp(
+      name,
+      phone,
+      password,
+      passwordConfirmation,
+    );
+
+    if (response?.statusCode == 200) {
+      print('Sign Up Successful!');
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+    } else {
+      print('Sign Up Failed: ${response?.data}');
+    }
   }
 
   @override
@@ -42,49 +50,233 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            // The rest of your UI code here
-            GestureDetector(
-              onTap: _handleSignUp,
-              child: BlocConsumer<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state is AuthAuthenticated) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (ctx) => const HomeScreen()),
-                    );
-                  } else if (state is AuthError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message)),
-                    );
-                  }
-                },
-                builder: (context, state) {
-                  if (state is AuthLoading) {
-                    return const CircularProgressIndicator(
-                      color: Colors.white,
-                    );
-                  }
-                  return const Row(
-                    mainAxisSize: MainAxisSize.min,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset('assets/appicon.svg'),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Text(
+                  "Woorkroom",
+                  style: TextStyle(
+                    color: Color(0xff3A89FF),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const Gap(25),
+            Container(
+              height: MediaQuery.of(context).size.height / 1.5,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Sign Up to Woorkroom',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 25),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Sign Up",
+                      const Text(
+                        "Name",
                         style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          color: Color(0xff7D8592),
+                          fontSize: 15,
                         ),
                       ),
-                      Gap(5),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
+                      TextField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Color(0xffB8C8E0),
+                              ),
+                            ),
+                            hintText: "Enter your name",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                            )),
+                      )
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Phone Number",
+                        style: TextStyle(
+                          color: Color(0xff7D8592),
+                          fontSize: 15,
+                        ),
+                      ),
+                      TextField(
+                        controller: _phoneController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Color(0xffB8C8E0),
+                              ),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: const Icon(
+                                Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {},
+                            ),
+                            hintText: "Phone number",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                            )),
+                      )
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Password",
+                        style: TextStyle(
+                          color: Color(0xff7D8592),
+                          fontSize: 15,
+                        ),
+                      ),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Color(0xffB8C8E0),
+                              ),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: const Icon(
+                                Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {},
+                            ),
+                            hintText: "Password",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                            )),
+                      )
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Confirm Password",
+                        style: TextStyle(
+                          color: Color(0xff7D8592),
+                          fontSize: 15,
+                        ),
+                      ),
+                      TextField(
+                        controller: _passwordConfirmationController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(
+                                color: Color(0xffB8C8E0),
+                              ),
+                            ),
+                            hintText: "Confirm your password",
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                            )),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _rememberMe,
+                            onChanged: (value) {
+                              setState(() {
+                                _rememberMe = value!;
+                              });
+                            },
+                          ),
+                          const Text("Remember me"),
+                        ],
+                      ),
+                      TextButton(
+                        child: const Text(
+                          "Forgot Password?",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        onPressed: () {},
                       ),
                     ],
-                  );
-                },
+                  ),
+                  GestureDetector(
+                    onTap: _handleSignUp, // Trigger the sign-up process
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: const Color(0xff3F8CFF),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Gap(5),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      "I have an account?",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Color(0xff3F8CFF),
+                      ),
+                    ),
+                  )
+                ],
               ),
-            ),
+            )
           ],
         ),
       ),

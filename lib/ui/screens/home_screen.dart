@@ -14,7 +14,6 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Home Screen"),
         centerTitle: true,
-        leading: Text("Salom Mening Ismim "),
         actions: [
           IconButton(
             onPressed: () {
@@ -31,13 +30,14 @@ class HomeScreen extends StatelessWidget {
               context,
               MaterialPageRoute(builder: (ctx) => const LoginScreen()),
             );
-          } else if (state is AuthError) {
+          }
+          if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
           }
         },
-        child: Center(
+        child: const Center(
           child: Text('Welcome to the Home Screen!'),
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:crm/bloc/authbloc/auth_bloc.dart';
 import 'package:crm/bloc/authbloc/auth_state.dart';
 import 'package:crm/services/auth_service.dart';
 import 'package:crm/ui/screens/home_screen.dart';
+import 'package:crm/ui/screens/login_screen.dart';
 import 'package:crm/ui/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,10 +41,9 @@ class MyApp extends StatelessWidget {
                 );
               }
             },
-            child: MaterialApp(
-              home: Scaffold(
-                body: Container(), // Placeholder widget
-              ),
+            child:  const MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: LoginScreen(),
             ),
           ),
         );
