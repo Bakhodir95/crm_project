@@ -39,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     setState(() {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (ctx) => HomeScreen()));
+          context, MaterialPageRoute(builder: (ctx) => const HomeScreen()));
     });
   }
 
@@ -137,7 +137,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Icons.visibility,
                                 color: Colors.grey,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                
+                              },
                             ),
                             hintText: "Phone number",
                             hintStyle: const TextStyle(

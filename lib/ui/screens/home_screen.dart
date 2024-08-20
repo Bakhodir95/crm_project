@@ -1,4 +1,5 @@
 import 'package:crm/controllers/auth_controller.dart';
+import 'package:crm/ui/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,6 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
               onPressed: () {
                 _authController.logout();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (ctx) => const LoginScreen()));
               },
               icon: const Icon(Icons.logout))
         ],

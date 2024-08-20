@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController {
@@ -19,8 +20,8 @@ class AuthController {
       );
 
       // token is in response.data['token']
-      final token = response.data['token'];
-      print(token);
+      final token = response.data['data']["token"];
+      print(response.data);
       if (token != null) {
         await _saveToken(token);
       }
@@ -40,27 +41,9 @@ class AuthController {
     String password,
     String phone,
   ) async {
-    try {
-      final response = await dio.post(
-        '${baseUrl}login',
-        data: {
-          'phone': phone,
-          'password': password,
-        },
-      );
-      return response;
-    } on DioException catch (e) {
-      print('Error: ${e.response?.data}');
-      return e.response;
-    } catch (e) {
-      print('Unexpected error: $e');
-      return Response(
-        requestOptions: RequestOptions(path: '${baseUrl}login'),
-        statusCode: 500,
-        statusMessage: 'Unexpected error occurred',
-        data: {'message': e.toString()},
-      ); // Return a Response object with error details
-    }
+    print(phone);
+    print(password);
+    return null;
   }
 
   Future<void> _saveToken(String token) async {
@@ -89,7 +72,6 @@ class AuthController {
           },
         ),
       );
-
       print('Logout successful: ${response.data}');
       await _clearToken();
       return response;

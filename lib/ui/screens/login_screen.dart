@@ -16,27 +16,35 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final auth = AuthController();
-  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool isLoading = false;
 
   void _login() async {
-    final name = _nameController.text;
+    setState(() {
+      isLoading = true;
+    });
+    final phone = _phoneController.text;
     final password = _passwordController.text;
 
     final response = await auth.login(
-      name,
+      phone,
       password,
     );
 
-    if (response?.statusCode == 200) {
-      print('Sign Up Successful!');
-    } else {
-      print('Sign Up Failed: ${response?.data}');
-    }
     setState(() {
+      isLoading = false;
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (ctx) => HomeScreen()));
+          context, MaterialPageRoute(builder: (ctx) => const HomeScreen()));
     });
+    print(_passwordController);
+    print(_phoneController);
+
+    if (response?.statusCode == 200) {
+      print('Sign In Successful!');
+    } else {
+      print('Sign In Failed: ${response?.data}');
+    }
   }
 
   @override
@@ -93,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       TextField(
+                        controller: _phoneController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
@@ -119,6 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       TextField(
+                        controller: _passwordController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
@@ -162,43 +172,37 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PhoneValidationScreen(),
-                        ),
-                      );
-                    },
-                    child: InkWell(
-                      onTap: _login,
-                      child: Container(
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: const Color(0xff3F8CFF),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Sign In",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                            Gap(5),
-                            Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
+                    onTap: _login,
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: const Color(0xff3F8CFF),
                       ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Sign In",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                Gap(5),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
                     ),
                   ),
                   Row(
