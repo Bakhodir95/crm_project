@@ -20,6 +20,7 @@ class AuthController {
 
       // token is in response.data['token']
       final token = response.data['token'];
+      print(token);
       if (token != null) {
         await _saveToken(token);
       }
