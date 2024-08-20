@@ -47,14 +47,19 @@ class AuthController {
           'password': password,
         },
       );
+      return response;
     } on DioException catch (e) {
       print('Error: ${e.response?.data}');
       return e.response;
     } catch (e) {
       print('Unexpected error: $e');
-      return null;
+      return Response(
+        requestOptions: RequestOptions(path: '${baseUrl}login'),
+        statusCode: 500,
+        statusMessage: 'Unexpected error occurred',
+        data: {'message': e.toString()},
+      ); // Return a Response object with error details
     }
-    return null;
   }
 
   Future<void> _saveToken(String token) async {
