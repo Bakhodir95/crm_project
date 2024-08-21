@@ -1,4 +1,5 @@
 import 'package:crm/bloc/authbloc/auth_bloc.dart';
+import 'package:crm/bloc/authbloc/auth_event.dart';
 import 'package:crm/bloc/authbloc/auth_state.dart';
 import 'package:crm/services/auth_service.dart';
 import 'package:crm/ui/screens/home_screen.dart';
@@ -24,26 +25,22 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) => AuthBloc(authController: AuthController()),
+              create: (context) => AuthBloc(authController: AuthController())
+                ..add(CheckUserTokenEvent()),
             ),
           ],
-          child: BlocListener<AuthBloc, AuthState>(
-            listener: (context, state) {
-              if (state is AuthAuthenticated) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (ctx) => const HomeScreen()),
-                );
-              } else {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (ctx) => const RegisterScreen()),
-                );
-              }
-            },
-            child:  const MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home: LoginScreen(),
+          child: MaterialApp(
+            home: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthAuthenticated) {
+                  print(state.token);
+                  return const HomeScreen();
+                } else if (state is AuthLoading) {
+                  return const CircularProgressIndicator();
+                } else {
+                  return const LoginScreen();
+                }
+              },
             ),
           ),
         );

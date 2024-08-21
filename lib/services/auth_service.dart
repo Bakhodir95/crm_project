@@ -57,11 +57,11 @@ class AuthController {
       if (token != null) {
         await _saveToken(token);
       }
-      return null;
+      return response; 
     } on DioException catch (e) {
       print("DIO EXCEPTION");
       print('Error: ${e.response?.data}');
-      return e.response;
+      return e.response; 
     } catch (e) {
       print('Unexpected error: $e');
       return Response(

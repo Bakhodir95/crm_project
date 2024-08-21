@@ -9,7 +9,10 @@ class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthAuthenticated extends AuthState {}
+class AuthAuthenticated extends AuthState {
+  String token;
+  AuthAuthenticated({required this.token});
+}
 
 class AuthError extends AuthState {
   final String message;
